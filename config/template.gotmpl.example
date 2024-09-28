@@ -1,0 +1,12 @@
+Moin!
+
+Jemand hat sich als {{.User}} auf dem Server {{.Host}} angemeldet.
+Folgende Daten sind zum Login verfügbar:
+
+Zeitstempel : {{.Timestamp}}
+Remote User : {{.RemoteUser}}
+Remote Host : {{.RemoteHost}}
+TTY         : {{.Tty}}
+
+
+Mit freundlichen Grüßen

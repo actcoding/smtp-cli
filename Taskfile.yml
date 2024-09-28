@@ -1,0 +1,49 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  OUT_DIR: dist
+  OUT_FILE: smtp-cli
+
+tasks:
+  build:
+    internal: true
+    aliases:
+      - build
+      - compile
+    cmd: go build -ldflags="{{.LDFLAGS}}" -o "{{.OUT_DIR}}/{{.OUT_FILE}}" .
+    deps:
+      - clean
+
+  default:
+    cmds:
+      - task: build:debug
+
+  build:release:
+    cmds:
+      - task: build
+        vars:
+          LDFLAGS: -s -w
+      - task: dist
+
+  build:debug:
+    cmds:
+      - task: build
+        vars:
+          LDFLAGS: ""
+      - task: dist
+
+  dist:
+    desc: Install additional files for release.
+    cmds:
+      - cp install.sh "{{.OUT_DIR}}/"
+      - cp config/smtp-cli.json.example "{{.OUT_DIR}}/smtp-cli.json"
+      - cp config/template.gotmpl.example "{{.OUT_DIR}}/template.gotmpl"
+      - tar czvf "{{.OUT_FILE}}.tar.gz" "{{.OUT_DIR}}/"
+
+  clean:
+    cmd: rm -rf "{{.OUT_DIR}}"
+
+  test:
+    cmd: go test -v -cover -coverprofile=coverage.out ./...
