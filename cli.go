@@ -31,7 +31,7 @@ var flagTemplate string
 func main() {
 	flag.BoolVar(&flagVersion, "version", false, "Print the tool version and exit.")
 	flag.StringVar(&flagConfig, "config", "smtp-cli.json", "The config file to use.")
-	flag.StringVar(&flagTemplate, "template", "template.gotmpl", "The config file to use.")
+	flag.StringVar(&flagTemplate, "template", "template.gotmpl", "A file to load the go template from.")
 	flag.Parse()
 
 	if flagVersion {

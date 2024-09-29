@@ -5,6 +5,7 @@ version: '3'
 vars:
   OUT_DIR: dist
   OUT_FILE: smtp-cli
+  OUT_ARCHIVE: smtp-cli
 
 tasks:
   build:
@@ -13,8 +14,9 @@ tasks:
       - build
       - compile
     vars:
-      BUILD_VERSION: "dev"
-      BUILD_COMMIT: "sha1"
+      BUILD_VERSION: "{{ env \"BUILD_VERSION\" | default \"dev\" }}"
+      BUILD_COMMIT:
+        sh: git rev-parse --short HEAD
     cmd: |
       go build \
         -ldflags="{{.LDFLAGS}} -X 'main.Version={{.BUILD_VERSION}}' -X 'main.CommitHash={{.BUILD_COMMIT}}' -X 'main.BuildTimestamp={{ now }}'" \
@@ -47,7 +49,11 @@ tasks:
       - cp install.sh "{{.OUT_DIR}}/"
       - cp config/smtp-cli.json.example "{{.OUT_DIR}}/smtp-cli.json"
       - cp config/template.gotmpl.example "{{.OUT_DIR}}/template.gotmpl"
-      - tar czvf "{{.OUT_FILE}}.tar.gz" "{{.OUT_DIR}}/"
+      - tar czvf "{{.OUT_ARCHIVE}}.tar.gz" "{{.OUT_DIR}}/"
+    sources:
+      - dist/**
+    generates:
+      - "{{.OUT_ARCHIVE}}.tar.gz"
 
   clean:
     cmd: rm -rf "{{.OUT_DIR}}"
