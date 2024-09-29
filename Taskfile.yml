@@ -12,7 +12,14 @@ tasks:
     aliases:
       - build
       - compile
-    cmd: go build -ldflags="{{.LDFLAGS}}" -o "{{.OUT_DIR}}/{{.OUT_FILE}}" .
+    vars:
+      BUILD_VERSION: "dev"
+      BUILD_COMMIT: "sha1"
+    cmd: |
+      go build \
+        -ldflags="{{.LDFLAGS}} -X 'main.Version={{.BUILD_VERSION}}' -X 'main.CommitHash={{.BUILD_COMMIT}}' -X 'main.BuildTimestamp={{ now }}'" \
+        -o "{{.OUT_DIR}}/{{.OUT_FILE}}" \
+        .
     deps:
       - clean
 

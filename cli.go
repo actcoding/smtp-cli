@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"time"
 
@@ -17,13 +18,26 @@ type Data struct {
 	Timestamp  time.Time
 }
 
+var (
+	Version        = "dev"
+	CommitHash     = "n/a"
+	BuildTimestamp = "n/a"
+)
+
+var flagVersion bool
 var flagConfig string
 var flagTemplate string
 
 func main() {
+	flag.BoolVar(&flagVersion, "version", false, "Print the tool version and exit.")
 	flag.StringVar(&flagConfig, "config", "smtp-cli.json", "The config file to use.")
 	flag.StringVar(&flagTemplate, "template", "template.gotmpl", "The config file to use.")
 	flag.Parse()
+
+	if flagVersion {
+		fmt.Printf("smtp-cli %s \n\nRevision  : %s \nTimestamp : %s \n", Version, CommitHash, BuildTimestamp)
+		os.Exit(0)
+	}
 
 	config, err := LoadConfig(&flagConfig)
 	if err != nil {
