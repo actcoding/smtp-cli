@@ -5,7 +5,7 @@ version: '3'
 vars:
   OUT_DIR: dist
   OUT_FILE: smtp-cli
-  OUT_ARCHIVE: smtp-cli
+  OUT_ARCHIVE: "{{ env \"OUT_ARCHIVE\" | default \"smtp-cli\" }}"
 
 tasks:
   build:
